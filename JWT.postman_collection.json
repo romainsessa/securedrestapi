@@ -1,0 +1,90 @@
+{
+	"info": {
+		"_postman_id": "c5fc8798-871d-4e0f-a2a4-27314185c389",
+		"name": "JWT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:8080/api/public/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"romainsessa@gmail.com\",\r\n    \"password\" : \"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/public/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"public",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/api/user/hello",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyb21haW5zZXNzYUBnbWFpbC5jb20iLCJpc3MiOiJjb20ub3BlbmNsYXNzcm9vbXMiLCJpYXQiOjE2MjQyOTgwOTIsImV4cCI6MTYyNDkwMjg5Mn0.7DNIWMLyK0Dhf4RyRQbyMnTPSl9EzQlJ1iEcZ6OlwEeNEWbz0Bibklu8l4ZT3emlQD8m04hugQQv6VWaOfc6yg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/user/hello",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"hello"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/api/admin/hello",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYW1lcyIsImlzcyI6ImNvbS5vcGVuY2xhc3Nyb29tcyIsImlhdCI6MTYyNDk1NjkyOCwiZXhwIjoxNjI1NTYxNzI4fQ.BokmM89ZWK4mAXvwTtMFW8etKDZCK94-hPmJ2zDZH7phIjqD9Db0GpRQtnsFeVHXUVVJ4sMO_OBk5Q2gAuPmzw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/admin/hello",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"hello"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
