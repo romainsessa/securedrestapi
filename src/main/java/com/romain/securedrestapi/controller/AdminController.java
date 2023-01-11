@@ -11,6 +11,6 @@ public class AdminController {
 	@GetMapping("hello")
 	public String getHelloAdmin() {
 		return "Hello Admin";
-	}	
-	
+	}
+
 }

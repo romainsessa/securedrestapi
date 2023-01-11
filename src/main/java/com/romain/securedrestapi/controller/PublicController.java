@@ -1,7 +1,5 @@
 package com.romain.securedrestapi.controller;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.romain.securedrestapi.configuration.JwtTokenUtil;
 import com.romain.securedrestapi.model.InternalUser;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/public")
 public class PublicController {
@@ -29,35 +29,27 @@ public class PublicController {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
-	Logger logger = LoggerFactory.getLogger(PublicController.class);
-	
-	@PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody @Valid InternalUser user) {
-		
-        try {
-            Authentication authenticate = authenticationManager
-                .authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                    		user.getUsername(), user.getPassword()
-                    )
-                );
 
-            User autendicatedUser = (User) authenticate.getPrincipal();
-    
-            String token = jwtTokenUtil.generateAccessToken(autendicatedUser);
-            logger.info("Token is : " + token);
-            
-            return ResponseEntity.ok()
-                .header(
-                    HttpHeaders.AUTHORIZATION,
-                    token
-                )
-                .body(autendicatedUser.getUsername() + " successfully autenticated");
-            
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }	
-	
+	Logger logger = LoggerFactory.getLogger(PublicController.class);
+
+	@PostMapping("login")
+	public ResponseEntity<String> login(@RequestBody @Valid InternalUser user) {
+
+		try {
+			Authentication authenticate = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+			User autendicatedUser = (User) authenticate.getPrincipal();
+
+			String token = jwtTokenUtil.generateAccessToken(autendicatedUser);
+			logger.info("Token is : " + token);
+
+			return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
+					.body(autendicatedUser.getUsername() + " successfully autenticated");
+
+		} catch (BadCredentialsException ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 }
