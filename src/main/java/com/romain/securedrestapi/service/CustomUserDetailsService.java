@@ -1,9 +1,8 @@
-package com.romain.securedrestapi.configuration;
+package com.romain.securedrestapi.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,14 +18,21 @@ import com.romain.securedrestapi.repository.IUserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
-	@Autowired
 	private IUserRepository userRepository;
+	
+	public CustomUserDetailsService(final IUserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		InternalUser user = userRepository.findByUsername(username).get(0);
+		InternalUser user = userRepository.findByUsername(username);
+		
+		if(user == null) {
+			throw new UsernameNotFoundException(username + " not found");
+		}
 
-		//Use the following line is password are not encrypted in database.
+		//Use the following line if password is not encrypted in database.
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		
 		return new org.springframework.security.core.userdetails.User(
@@ -37,10 +43,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	private List<GrantedAuthority> getGrantedAuthorities(InternalRole role) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		//Spring Security automatically prefix role with ROLE_
-		//so if the role name in database isn't prefix with ROLE_
-		//we have to it
-		authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+		if (role != null) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
 		return authorities;
 	}
 

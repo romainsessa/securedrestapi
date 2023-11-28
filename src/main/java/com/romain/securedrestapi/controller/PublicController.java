@@ -2,7 +2,6 @@ package com.romain.securedrestapi.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.romain.securedrestapi.configuration.JwtTokenUtil;
 import com.romain.securedrestapi.model.InternalUser;
+import com.romain.securedrestapi.service.JWTService;
 
 import jakarta.validation.Valid;
 
@@ -25,12 +24,14 @@ import jakarta.validation.Valid;
 @RequestMapping("api/public")
 public class PublicController {
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
-
-	Logger logger = LoggerFactory.getLogger(PublicController.class);
+	private AuthenticationManager authenticationManager;	
+	private JWTService jwtService;
+	private Logger logger = LoggerFactory.getLogger(PublicController.class);
+	
+	public PublicController(AuthenticationManager authenticationManager, JWTService jwtService) {
+		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtService;
+	}
 
 	@PostMapping("login")
 	public ResponseEntity<String> login(@RequestBody @Valid InternalUser user) {
@@ -41,13 +42,13 @@ public class PublicController {
 
 			User autendicatedUser = (User) authenticate.getPrincipal();
 
-			String token = jwtTokenUtil.generateAccessToken(autendicatedUser);
+			String token = jwtService.generateToken(autendicatedUser);
 			logger.info("Token is : " + token);
 
 			return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
 					.body(autendicatedUser.getUsername() + " successfully autenticated");
-
 		} catch (BadCredentialsException ex) {
+			logger.error(user.getUsername() + " - credentials error");
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
